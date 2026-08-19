@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AZURE_RESOURCE_GROUP = "DevLab"
+        AZURE_RESOURCE_GROUP = "DevTest"
         AKS_CLUSTER_NAME     = "myapp-aks-cluster"
         AZURE_LOCATION       = "swedencentral"
     }
