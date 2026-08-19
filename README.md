@@ -4,7 +4,9 @@ Project Overview
 This project demonstrates how to provision a highly available Azure Kubernetes Service (AKS) cluster using Terraform while automating the entire Infrastructure as Code deployment process through a Jenkins CI/CD pipeline.
 The infrastructure is created entirely from code, including the Azure Resource Group, Virtual Network, subnets, network security controls, and AKS cluster. Jenkins automates the Terraform workflow, ensuring every deployment follows a consistent, repeatable, and version-controlled process.
 This project showcases real-world DevOps practices such as Infrastructure as Code, continuous integration, automation, Azure cloud provisioning, and Kubernetes orchestration.
+
 Architecture Diagram
+
 +----------------------+
 |      Developer       |
 +----------+-----------+
