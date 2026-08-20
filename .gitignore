@@ -12,6 +12,7 @@ crash.*.log
 # Exclude all .tfvars files (likely contain sensitive secrets)
 *.tfvars
 *.tfvars.json
+!terraform.tfvars
 
 # Ignore override files
 override.tf
