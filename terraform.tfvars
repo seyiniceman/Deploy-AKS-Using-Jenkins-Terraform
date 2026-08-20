@@ -1,4 +1,4 @@
-resource_group_name = "DevLab"
+resource_group_name = "DevLab-AKS"
 location            = "Sweden Central"
 cluster_name        = "myapp-aks-cluster"
 
