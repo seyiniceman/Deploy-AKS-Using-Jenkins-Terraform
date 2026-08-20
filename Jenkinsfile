@@ -118,36 +118,44 @@ pipeline {
         }
 
         stage('Configure AKS Access') {
-            steps {
-                withCredentials([
-                    string(credentialsId: 'azure-client-id', variable: 'ARM_CLIENT_ID'),
-                    string(credentialsId: 'azure-client-secret', variable: 'ARM_CLIENT_SECRET'),
-                    string(credentialsId: 'azure-tenant-id', variable: 'ARM_TENANT_ID'),
-                    string(credentialsId: 'azure-subscription-id', variable: 'ARM_SUBSCRIPTION_ID')
-                ]) {
+    steps {
+        withCredentials([
+            string(credentialsId: 'azure-client-id', variable: 'ARM_CLIENT_ID'),
+            string(credentialsId: 'azure-client-secret', variable: 'ARM_CLIENT_SECRET'),
+            string(credentialsId: 'azure-tenant-id', variable: 'ARM_TENANT_ID'),
+            string(credentialsId: 'azure-subscription-id', variable: 'ARM_SUBSCRIPTION_ID')
+        ]) {
+            sh '''
+                set +x
 
-                    sh '''
-                        echo "=== Connecting Jenkins to AKS ==="
+                echo "=== Connecting Jenkins to AKS ==="
 
-                        az login \
-                          --service-principal \
-                          --username "$ARM_CLIENT_ID" \
-                          --password "$ARM_CLIENT_SECRET" \
-                          --tenant "$ARM_TENANT_ID"
+                az login \
+                  --service-principal \
+                  --username "$ARM_CLIENT_ID" \
+                  --password "$ARM_CLIENT_SECRET" \
+                  --tenant "$ARM_TENANT_ID" \
+                  --output none
 
-                        az account set \
-                          --subscription "$ARM_SUBSCRIPTION_ID"
+                az account set \
+                  --subscription "$ARM_SUBSCRIPTION_ID"
 
-                        mkdir -p ~/.kube
+                RESOURCE_GROUP="$(terraform output -raw resource_group_name)"
+                CLUSTER_NAME="$(terraform output -raw cluster_name)"
 
-                        az aks get-credentials \
-                          --resource-group "$AZURE_RESOURCE_GROUP" \
-                          --name "$AKS_CLUSTER_NAME" \
-                          --overwrite-existing
-                    '''
-                }
-            }
+                echo "Connecting to AKS cluster: $CLUSTER_NAME"
+                echo "Resource group: $RESOURCE_GROUP"
+
+                mkdir -p "$HOME/.kube"
+
+                az aks get-credentials \
+                  --resource-group "$RESOURCE_GROUP" \
+                  --name "$CLUSTER_NAME" \
+                  --overwrite-existing
+            '''
         }
+    }
+}
 
         stage('Verify AKS Cluster') {
             steps {
